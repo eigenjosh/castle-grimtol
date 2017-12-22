@@ -6,40 +6,83 @@ namespace CastleGrimtol.Project
     {
         public Room CurrentRoom { get; set; }
         public Player CurrentPlayer { get; set; }
+        public List<Room> Rooms { get; set; }
+        public List<Item> Items { get; set; }
 
         public void Reset()
         {
 
         }
+        public string Go(string input, Room room)
+        {
+            if (room == null)
+            {
+                throw new System.ArgumentNullException(nameof(room));
+            }
+
+            string direction = input.Split(" ")[3];
+            Move(direction);
+            return direction;
+        }
+
+        public void Move(string direction)
+        {
+            //given string direction
+            //check if currentRoom.exits contains a key for directions
+            if (CurrentRoom.Exits.ContainsKey(direction))
+            {
+                //but what if locked
+                CurrentRoom = CurrentRoom.Exits[direction];
+                System.Console.WriteLine(CurrentRoom.Description);
+            }
+            else
+            {
+                System.Console.WriteLine("nuh uh");
+            }
+        }
 
         public void Setup()
         {
-            Room0 = new Room("Starting room", "A dimly lit room, the only source of light being a cracked, dusty skylight overhead. There is a large mound of refuse heaped against the south wall");
-            Room1 = new Room("", "");
-            Room2 = new Room("", "");
-            Room3= new Room("", "");
-            Room4 = new Room("", "");
-            Room5 = new Room("", "");
-            Room6 = new Room("", "");
-            Room7 = new Room("", "");
-            Room8 = new Room("", "");
-            Room9 = new Room("", "");
-            Room10 = new Room("", "");
+            Rooms = new List<Room>();
+            Room room1 = new Room()
+            {
+                Description = "This is room1",
+                Name = "room1",
+                Items = new List<Item>()
+            };
+            Room room2 = new Room()
+            {
+                Description = "This is room2",
+                Name = "room2",
+                Items = new List<Item>()
+            };
 
-            Pipe = new Item("Pipe", "An old lead pipe capped on one end, ")
+            room1.Exits.Add(key: "n", value: room2);
+            room2.Exits.Add(key: "s", value: room1);
+
+            CurrentRoom = room1;
         }
-
+        // Rooms = new List<Room>();
+        // Room room1 = new Room()
+        // {
+        //     Description = "This is room1",
+        //     Name = "room1",
+        //     Items = new List<Item>()
+        // };
+        // Room room2 = new Room()
+        // {
+        //     Description = "This is room2",
+        //     Name = "room2",
+        //     Items = new List<Item>()
+        // };
+        public string GetUserInput(string input)
+        {
+            return input;
+        }
+        public string input = System.Console.ReadLine().ToString().ToLower();
         public void UseItem(string itemName)
         {
-            switch(itemName)
-            {
-                case pipe:
-                System.Console.WriteLine("After several blows to the door's handle, the knob clatters to the ground and the door opens slightly.");
-                    break;
-                case bentKey:
-                System.Console.WriteLine("The shank of the key is slightly bent enough to the point where it is unusable. Perhaps it can be bent back into shape?");
-                    break;
-            }
+
         }
     }
 }
