@@ -60,7 +60,7 @@ namespace CastleGrimtol.Project
             room1.Exits.Add(key: "n", value: room2);
             room2.Exits.Add(key: "s", value: room1);
 
-            CurrentRoom = room1;
+            Room CurrentRoom = room1;
         }
         // Rooms = new List<Room>();
         // Room room1 = new Room()

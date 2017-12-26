@@ -14,7 +14,7 @@ namespace CastleGrimtol
             while (playing)
             {
                 System.Console.WriteLine(game.CurrentRoom.Description);
-                var choice = game.GetUserInput(game.input).Split(""); // go n
+                var choice = game.GetUserInput(game.input).Split(" "); // go n
                 var command = choice[0];
                 var option = choice[1];
                 //figure out what to do with the user input
@@ -24,14 +24,12 @@ namespace CastleGrimtol
                         switch (option)
                         {
                             case "n":
-                                game.Move("north");
-                                break;
-                            default:
-                                System.Console.WriteLine("Invalid direction");
+                               game
                                 break;
                         }
                         break;
                 }
+
             }
         }
     }

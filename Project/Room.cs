@@ -22,10 +22,10 @@ namespace CastleGrimtol.Project
             
         }
         public Room AddExit(Room CurrentRoom, string direction)
-        {
-            if(direction.Equals("n"))
+        { 
+            if(direction.Equals(value: "n"))
             {
-                CurrentRoom.Exits.Add("s", CurrentRoom);
+                CurrentRoom.Exits.Add(key: "s", value: CurrentRoom);
                 return CurrentRoom;
             }
             else
