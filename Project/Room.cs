@@ -14,24 +14,17 @@ namespace CastleGrimtol.Project
 
         public string Name { get; set; }
         public string Description { get; set; }
+        public string DescriptionN { get; set; }
+        public string DescriptionS { get; set; }
+        public string DescriptionE { get; set; }
+        public string DescriptionW { get; set; }
+
         public List<Item> Items { get; set; }
         public Dictionary<string, Room> Exits { get; set; }
 
         public void UseItem(Item item)
         {
-            
-        }
-        public Room AddExit(Room CurrentRoom, string direction)
-        { 
-            if(direction.Equals(value: "n"))
-            {
-                CurrentRoom.Exits.Add(key: "s", value: CurrentRoom);
-                return CurrentRoom;
-            }
-            else
-            {
-                throw new System.ArgumentException { };
-            }
+
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using CastleGrimtol.Project;
 
 namespace CastleGrimtol
@@ -9,27 +10,22 @@ namespace CastleGrimtol
         {
             var game = new Game();
             game.Setup();
+            Console.Clear();
+            var playing = true;
 
-            bool playing = true;
             while (playing)
             {
-                System.Console.WriteLine(game.CurrentRoom.Description);
-                var choice = game.GetUserInput(game.input).Split(" "); // go n
-                var command = choice[0];
-                var option = choice[1];
-                //figure out what to do with the user input
-                switch (command)
+                Console.WriteLine(game.CurrentRoom.Description);
+                var Input = game.GetUserInput().ToLower();
+                if (Input == "q" || Input == "quit")
                 {
-                    case "go":
-                        switch (option)
-                        {
-                            case "n":
-                               game
-                                break;
-                        }
-                        break;
+                    playing = false;
+                    continue;
                 }
-
+                else
+                {
+                    game.HandleUserInput(Input);
+                }
             }
         }
     }
