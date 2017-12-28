@@ -15,7 +15,6 @@ namespace CastleGrimtol
 
             while (playing)
             {
-                Console.WriteLine(game.CurrentRoom.Description);
                 var Input = game.GetUserInput().ToLower();
                 if (Input == "q" || Input == "quit")
                 {

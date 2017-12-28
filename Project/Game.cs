@@ -22,7 +22,7 @@ namespace CastleGrimtol.Project
 
             Room room1 = new Room()
             {
-                Description = "This is room 1",
+                Description = "Your eyes slowly open as you regain consciousness.",
                 Name = "Room 1",
                 Items = new List<Item>(),
                 Exits = new Dictionary<string, Room>()
@@ -77,7 +77,7 @@ namespace CastleGrimtol.Project
         {
             if (Input.Contains(" "))
             {
-                var choice = Input.Split(' ');
+                var choice = Input.Split(" ");
                 var command = choice[0];
                 var option = choice[1];
                 if (command == "go")
@@ -99,20 +99,50 @@ namespace CastleGrimtol.Project
                         Move("west");
                     }
                 }
-                else if (command == "look" || command == "l")
+                else if (command == "look")
                 {
-                    System.Console.WriteLine(CurrentRoom.Description);
+                    if (option == "n" || option == "north")
+                    {
+                        System.Console.WriteLine(CurrentRoom.DescriptionN);
+                    }
+                    if (option == "s" || option == "south")
+                    {
+                        System.Console.WriteLine(CurrentRoom.DescriptionS);
+                    }
+                    if (option == "e" || option == "east")
+                    {
+                        System.Console.WriteLine(CurrentRoom.DescriptionE);
+                    }
+                    if (option == "w" || option == "west")
+                    {
+                        System.Console.WriteLine(CurrentRoom.DescriptionW);
+                    }
                 }
-                else if (command == "inventory" || command == "i")
+                else if (command == "take")
                 {
-                    if(CurrentPlayer.Inventory == null)
+                    if(CurrentRoom == Rooms[0])
                     {
-                        System.Console.WriteLine("You currently do not have any items.");
+                        if(option == "pipe" && CurrentRoom.Items.Contains(pipe))
+                        {
+                            CurrentRoom.Items.Remove(pipe);
+                            CurrentPlayer.Inventory.Add(pipe);
+                        }
                     }
-                    else
-                    {
+                }
+            }
+            else if (Input == "look")
+            {
+                System.Console.WriteLine(CurrentRoom.Description);
+            }
+            else if (Input == "inventory" || Input == "i")
+            {
+                if (CurrentPlayer.Inventory == null)
+                {
+                    System.Console.WriteLine("You currently do not have any items.");
+                }
+                else
+                {
                     System.Console.WriteLine(CurrentPlayer.Inventory);
-                    }
                 }
             }
         }
