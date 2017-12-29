@@ -8,8 +8,9 @@ namespace CastleGrimtol.Project
         public bool Playing;
         public string Response;
         public Room CurrentRoom { get; set; }
-        public Player CurrentPlayer { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        public Player CurrentPlayer { get; set; }
         public List<Room> Rooms { get; set; }
+        public Player Player1 { get; set; }
 
         public void Reset()
         {
@@ -19,38 +20,56 @@ namespace CastleGrimtol.Project
         public void Setup()
         {
             Rooms = new List<Room>();
+            Player1 = new Player();
 
-            Room Room0 = new Room("Storage Room 0", description: "A single skylight, cracked and yellowing from age, provides barely enough light to see that you are in some sort of dilapidated storage room.\nTwo rows of metal shelves stand near the wall to your right (east). A heap of black garbage bags lay against the opposing wall.")
+            Room Room0 = new Room(name: "Storage Room 0", description: "--A single skylight, cracked and yellowing from age, provides barely enough light to see that you are in some sort of dilapidated storage room.\nTwo rows of metal shelves stand near the wall to your right (east). A heap of black garbage bags lay against the opposing wall.")
             {
                 //Rooms[0]
-                DescriptionE = @"After allowing your eyes to adjust to the low light, you think you can make out what looks like a metal pipe, roughly forearm-length and capped at one end.",
-                DescriptionW = @"Using your hands to feel around the trash bags, you hear something small and metal fall onto the concrete floor.",
-                DescriptionN = "A door leading out of the storage room",
-                DescriptionS = "A simple white brick wall. Squinting your eyes, you can see an externally mounted electrical outlet near the bottom of the wall.",
-                Name = "Storage Room 0",
+                DescriptionE = @"--After allowing your eyes to adjust to the low light, you think you can make out what looks like a metal pipe, roughly forearm-length and capped at one end.",
+                DescriptionW = @"--Using your hands to feel around the trash bags, you hear something small and metal fall onto the concrete floor.",
+                DescriptionN = "--A door leading out of the storage room",
+                DescriptionS = "--A simple white brick wall. Squinting your eyes, you can see an externally mounted electrical outlet near the bottom of the wall.",
                 Items = new List<Item>(),
                 //pipe
                 //bent key
                 Exits = new Dictionary<string, Room>()
                 //north to corridor (Rooms[1])
             };
-            Room Room1 = new Room("Corridor 0", "You find yourself in a corridor, leading East and nowhere else.")
+            Room Room1 = new Room(name: "Corridor 1", description: "--You find yourself in a corridor, leading East and nowhere else.")
             {
                 //Rooms[1]
-                Description = "You find yourself in a corridor, leading East and nowhere else.",
-                DescriptionN = "This is the north wall of Corridor 0",
-                Name = "Room 2",
+                DescriptionN = "This is the north wall of Corridor 1",
                 Items = new List<Item>(),
                 Exits = new Dictionary<string, Room>()
-
+                //south to storage room (Rooms[0])
+            };
+            Room Room2 = new Room(name: "Empty Room 2", description: "--This room hasn't been built yet.")
+            {
+                //Rooms[2]
+                Items = new List<Item>(),
+                Exits = new Dictionary<string, Room>()
+            };
+            Room Room3 = new Room(name: "Empty Room 3", description: "--This room hasn't been built yet.")
+            {
+                //Rooms[3]
+                Items = new List<Item>(),
+                Exits = new Dictionary<string, Room>()
             };
 
-            Item pipe = new Item("pipe", "A metal pipe, about forearm-length and capped on one end.");
+            Item pipe = new Item("pipe", "--A metal pipe, about forearm-length and capped on one end.");
+            Item bentKey = new Item("bent key", "--A small brass key that is bent just slightly.");
             Room0.Items.Add(pipe);
             Room0.Exits.Add("north", Room1);
             Room0.Contextual.Add("get up", Room0);
+
             Room1.Exits.Add("south", Room0);
+            Room1.Exits.Add("east", Room2);
+            Room2.Exits.Add("west", Room1);
+            Room2.Exits.Add("north", Room3);
+            Room3.Exits.Add("south", Room2);
+            
             CurrentRoom = Room0;
+            CurrentPlayer = Player1;
         }
 
         public void Move(string direction)
@@ -58,10 +77,11 @@ namespace CastleGrimtol.Project
             if (CurrentRoom.Exits.ContainsKey(direction))
             {
                 CurrentRoom = CurrentRoom.Exits[direction];
+                System.Console.WriteLine(CurrentRoom.Description);
             }
             else
             {
-                Console.WriteLine("You cannot move in that direction.");
+                Console.WriteLine("--You cannot move in that direction.");
             }
         }
 
@@ -72,7 +92,8 @@ namespace CastleGrimtol.Project
         public string GetUserInput()
         {
             System.Console.BackgroundColor = ConsoleColor.Black;
-            System.Console.WriteLine("What would you like to do?");
+            System.Console.WriteLine(@"
+            What would you like to do?");
             Console.ResetColor();
             return Console.ReadLine();
         }
@@ -90,18 +111,26 @@ namespace CastleGrimtol.Project
                     if (preposition == "n" || preposition == "north")
                     {
                         Move("north");
+                        return;
                     }
                     if (preposition == "s" || preposition == "south")
                     {
                         Move("south");
+                        return;
                     }
                     if (preposition == "e" || preposition == "east")
                     {
                         Move("east");
+                        return;
                     }
                     if (preposition == "w" || preposition == "west")
                     {
                         Move("west");
+                        return;
+                    }
+                    else
+                    {
+                        System.Console.WriteLine("--Unrecognized direction.");
                     }
                 }
                 else if (command == "look" || command == "l")
@@ -109,29 +138,35 @@ namespace CastleGrimtol.Project
                     if (preposition == "n" || preposition == "north")
                     {
                         System.Console.WriteLine(CurrentRoom.DescriptionN);
+                        return;
                     }
                     if (preposition == "s" || preposition == "south")
                     {
                         System.Console.WriteLine(CurrentRoom.DescriptionS);
+                        return;
                     }
                     if (preposition == "e" || preposition == "east")
                     {
                         System.Console.WriteLine(CurrentRoom.DescriptionE);
+                        return;
                     }
                     if (preposition == "w" || preposition == "west")
                     {
                         System.Console.WriteLine(CurrentRoom.DescriptionW);
+                        return;
                     }
                     if (preposition == "at ")
                     {
-                        var context = choice[2];                
+                        var context = choice[2];
                         if (context == "shelves" || context == "shelving" && CurrentRoom == Rooms[0])
                         {
                             System.Console.WriteLine(CurrentRoom.DescriptionE);
+                            return;
                         }
-                        else if(context == "trash" || context == "bags" || context == "garbage" && CurrentRoom == Rooms[0])
+                        else if (context == "trash" || context == "bags" || context == "garbage" && CurrentRoom == Rooms[0])
                         {
                             System.Console.WriteLine(CurrentRoom.DescriptionW);
+                            return;
                         }
                         else
                         {
@@ -140,16 +175,19 @@ namespace CastleGrimtol.Project
                     }
                     else
                     {
-                        System.Console.WriteLine("That's not a direction I recognize.");
+                        System.Console.WriteLine("Unrecognized direction.");
                     }
                 }
                 else if (command == "take")
                 {
-                    if (CurrentRoom == Rooms[0])
+                    if (CurrentRoom.Name.Equals("Storage Room 0"))
                     {
                         if (preposition == "pipe")
                         {
-                            CurrentPlayer.Inventory.Add((new Item("pipe", "A metal pipe, about forearm-length and capped on one end.")));
+                            // CurrentRoom.Items.Add(new Item("pipe", "A metal pipe, about forearm-length and capped on one end."));
+                            CurrentPlayer.Inventory.Add(pipe);
+                            System.Console.WriteLine("pipe added to inventory");
+                            return;
                         }
                         else
                         {
@@ -159,29 +197,34 @@ namespace CastleGrimtol.Project
                     else
                     {
                         System.Console.WriteLine("You can't do that here.");
+                        return;
                     }
                 }
                 else
                 {
                     System.Console.WriteLine("Unknown command. Type \"h\" for a list of commands.");
+                    return;
                 }
             }
             else if (Input == "look")
             {
                 System.Console.WriteLine(CurrentRoom.Description);
+
             }
             else if (Input == "inventory" || Input == "i")
             {
                 if (CurrentPlayer.Inventory == null)
                 {
                     System.Console.WriteLine("You currently do not have any items.");
+                    return;
                 }
                 else
                 {
                     System.Console.WriteLine(CurrentPlayer.Inventory);
+                    return;
                 }
             }
-            else if (Input =="help" || Input == "h")
+            else if (Input == "help" || Input == "h")
             {
                 System.Console.WriteLine(@"
                < Commands:
@@ -192,95 +235,13 @@ namespace CastleGrimtol.Project
                   |>  inventory/i: returns CurrentPlayer.Inventory
                   |>  help/h: displays this message.
                 ");
+                return;
             }
             else
             {
                 System.Console.WriteLine("Unrecognized input.");
+                return;
             }
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// # Console Game Checkpoint
-
-// ### The Setup
-
-// As you begin working on a console game the basic requirements of any good console game will allow users to:
-//   - Move about a set of rooms
-//   - Get a description of the room they are in
-//   - Get Help - Shows a list of all available commands
-//   - Use Items
-//   - Give Up 
-//   - Restart
-  
-// To help you out with some of these basic features will notice that you already have some interfaces that have been built. These interfaces are designed to help ensure you implement the basic requirements of a console game. 
-
-// ### Step 1 -  Satisfy the Interfaces 
-
-// To satisfy the interfaces you will need to ensure that your classes implement all of the features of the provided interfaces... You cannot remove anything from any of the interfaces. 
-//   The Basic Features of the game:
-//   - `Go <Direction>` Moves the player from room to room
-//   - `Use <ItemName>` Uses an item in a room or from your inventory
-//   - `Take <ItemName>` Places an item into the player inventory and removes it from the room
-//   - `Help` Shows a list of commands and actions
-//   - `Quit` Quits the Game
-
-// ### Step 2 - Control the Game Loop
-
-// We have provided a basic story and map if you are not creative or simply don't want to spend your time thinking of a story to play your game. Following the provided story is not required however creating some sort of experience is. 
-
-// Your Game must implement the following features
-//   - At least 4 rooms
-//   - At least 1 usable item
-//   - At least 1 item that can be taken (can be the same as the usable item)
-//   - At least 1 room that changes based on an item use
-//   - When the player enters a room they get the room description
-//   - Players can see the items in their inventory
-//   - Players lose the game due to a bad decision
-//   - Players can win the game
-  
-  
-//  ## Functionality: 
-//  - Players can move room to room with the `go <direction>` command
-//  - Players can `use` items to change the state of the room (use key or use light)
-//  - Items exist for the player to `take` from rooms (not required for these to be used in a room)
-//  - `quit` ends the game
-//  - At least 4 rooms, 1 usable item, and 1 takeable item
-//  - Players can lose the game due to a bad decision
-//  - The game is winnable 
-
-// ## Visualization: 
-//  - `help` Provides the user a list of commands for your game
-//  - `look` Re-prints the room description
-//  - `inventory` prints a list of the items in the players inventory
-//  -  When the player enters a room they get the room description
-  
-// ### BONUS IDEAS - Some enhancing features
-// - Try changing the console color or adding some beeps for dramatic effect
-// - Clear the console when appropriate
-// - The user should know when its their turn try formatting the users input with something like this everytime its the users turn to type
-//   - What do you do: __________________ // <- Their Answer on the same line
-// - Add some riddles or puzzles for users to solve to get from room to room
-
-// ### Finished?
-// When You are finished please slack the url for your github repo to your mentor in a DM. Be sure you add this project to your gh-pages if you want credit for it.

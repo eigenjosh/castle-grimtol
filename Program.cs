@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using CastleGrimtol.Project;
 
 namespace CastleGrimtol
@@ -25,6 +24,7 @@ namespace CastleGrimtol
                 else
                 {
                     game.HandleUserInput(Input);
+                    continue;
                 }
             }
         }
