@@ -20,16 +20,28 @@ namespace CastleGrimtol.Project
         {
             Rooms = new List<Room>();
 
-            Room room1 = new Room()
+            Item pipe = new Item("pipe", "A metal pipe, about forearm-length and capped on one end.");
+            Room StorageRoom = new Room()
             {
-                Description = "Your eyes slowly open as you regain consciousness.",
-                Name = "Room 1",
+                //Rooms[0]
+                Description = @"A single skylight, cracked and yellowing from age, barely provides enough light to see that you are in some sort of dilapidated storage room.
+                Two rows of metal shelves stand near the wall to your right (east).
+                A heap of black garbage bags lay against the opposing wall.",
+                DescriptionE = @"After allowing your eyes to adjust to the low light, you think you can make out what looks like a metal pipe, roughly forearm-length and capped at one end.",
+                DescriptionW = @"Using your hands to feel around the trash bags, you hear something small and metal fall onto the concrete floor.",
+                DescriptionN = "A door leading out of the storage room",
+                DescriptionS = "A simple white brick wall. Squinting your eyes, you can see an externally mounted electrical outlet near the bottom of the wall.",
+                Name = "Storage Room 0",
                 Items = new List<Item>(),
+                //pipe
+                //bent key
                 Exits = new Dictionary<string, Room>()
+                //north to corridor (Rooms[1])
             };
-            Room room2 = new Room()
+            Room Corridor0 = new Room()
             {
-                Description = "This is room 2",
+                //Rooms[1]
+                Description = "You find yourself in a corridor leading East, ",
                 DescriptionN = "This is the north wall of room 2",
                 Name = "Room 2",
                 Items = new List<Item>(),
@@ -38,18 +50,17 @@ namespace CastleGrimtol.Project
             };
             Room room3 = new Room()
             {
+                //Rooms[2]
                 Description = "This is room 3",
                 Name = "Room 3",
                 Items = new List<Item>(),
                 Exits = new Dictionary<string, Room>()
             };
 
-            room1.Exits.Add("north", room2);
-            room2.Exits.Add("south", room1);
-            room1.Exits.Add("east", room3);
-            room3.Exits.Add("west", room1);
-
-            CurrentRoom = room1;
+            StorageRoom.Items.Add(pipe);
+            StorageRoom.Exits.Add("north", Corridor0);
+            Corridor0.Exits.Add("south", StorageRoom);
+            CurrentRoom = StorageRoom;
         }
 
         public void Move(string direction)
@@ -60,17 +71,17 @@ namespace CastleGrimtol.Project
             }
             else
             {
-                Console.WriteLine("");
+                Console.WriteLine("You cannot move in that direction.");
             }
         }
 
-        public void UseItem(string itemName)
+        public void UseItem(string name)
         {
-            throw new System.NotImplementedException();
+
         }
         public string GetUserInput()
         {
-            Console.WriteLine("What would you like to do: ");
+            Console.WriteLine("What would you like to do?");
             return Console.ReadLine();
         }
         public void HandleUserInput(string Input)
@@ -80,6 +91,7 @@ namespace CastleGrimtol.Project
                 var choice = Input.Split(" ");
                 var command = choice[0];
                 var option = choice[1];
+                var context = choice[3];
                 if (command == "go")
                 {
                     if (option == "n" || option == "north")
@@ -117,15 +129,21 @@ namespace CastleGrimtol.Project
                     {
                         System.Console.WriteLine(CurrentRoom.DescriptionW);
                     }
+                    if (option == "at")
+                    {
+                        if (context == "shelves" || context == "shelving" && CurrentRoom == Rooms[0])
+                        {
+                            System.Console.WriteLine(CurrentRoom.DescriptionE);
+                        }
+                    }
                 }
                 else if (command == "take")
                 {
-                    if(CurrentRoom == Rooms[0])
+                    if (CurrentRoom == Rooms[0])
                     {
-                        if(option == "pipe" && CurrentRoom.Items.Contains(pipe))
+                        if (option == "pipe")
                         {
-                            CurrentRoom.Items.Remove(pipe);
-                            CurrentPlayer.Inventory.Add(pipe);
+                        ;
                         }
                     }
                 }
