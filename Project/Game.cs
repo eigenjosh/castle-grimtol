@@ -20,13 +20,14 @@ namespace CastleGrimtol.Project
         {
             Rooms = new List<Room>();
 
-            Item pipe = new Item("pipe", "A metal pipe, about forearm-length and capped on one end.");
-            Room StorageRoom = new Room()
+            Room StorageRoom = new Room("Storage Room 0", @"A single skylight, cracked and yellowing from age, provides barely enough light to see that you are in some sort of dilapidated storage room.
+Two rows of metal shelves stand near the wall to your right (east).
+A heap of black garbage bags lay against the opposing wall.")
             {
                 //Rooms[0]
-                Description = @"A single skylight, cracked and yellowing from age, barely provides enough light to see that you are in some sort of dilapidated storage room.
-                Two rows of metal shelves stand near the wall to your right (east).
-                A heap of black garbage bags lay against the opposing wall.",
+                Description = @"A single skylight, cracked and yellowing from age, provides barely enough light to see that you are in some sort of dilapidated storage room.
+Two rows of metal shelves stand near the wall to your right (east).
+A heap of black garbage bags lay against the opposing wall.",
                 DescriptionE = @"After allowing your eyes to adjust to the low light, you think you can make out what looks like a metal pipe, roughly forearm-length and capped at one end.",
                 DescriptionW = @"Using your hands to feel around the trash bags, you hear something small and metal fall onto the concrete floor.",
                 DescriptionN = "A door leading out of the storage room",
@@ -38,27 +39,21 @@ namespace CastleGrimtol.Project
                 Exits = new Dictionary<string, Room>()
                 //north to corridor (Rooms[1])
             };
-            Room Corridor0 = new Room()
+            Room Corridor0 = new Room("Corridor 0", "You find yourself in a corridor, leading East and nowhere else.")
             {
                 //Rooms[1]
-                Description = "You find yourself in a corridor leading East, ",
-                DescriptionN = "This is the north wall of room 2",
+                Description = "You find yourself in a corridor, leading East and nowhere else.",
+                DescriptionN = "This is the north wall of Corridor 0",
                 Name = "Room 2",
                 Items = new List<Item>(),
                 Exits = new Dictionary<string, Room>()
 
             };
-            Room room3 = new Room()
-            {
-                //Rooms[2]
-                Description = "This is room 3",
-                Name = "Room 3",
-                Items = new List<Item>(),
-                Exits = new Dictionary<string, Room>()
-            };
 
+            Item pipe = new Item("pipe", "A metal pipe, about forearm-length and capped on one end.");
             StorageRoom.Items.Add(pipe);
             StorageRoom.Exits.Add("north", Corridor0);
+            StorageRoom.Contextual.Add("get up", StorageRoom);
             Corridor0.Exits.Add("south", StorageRoom);
             CurrentRoom = StorageRoom;
         }
@@ -81,11 +76,15 @@ namespace CastleGrimtol.Project
         }
         public string GetUserInput()
         {
-            Console.WriteLine("What would you like to do?");
+            System.Console.BackgroundColor = ConsoleColor.Black;
+            System.Console.WriteLine("What would you like to do?");
+            Console.ResetColor();
             return Console.ReadLine();
         }
         public void HandleUserInput(string Input)
         {
+            System.Console.ForegroundColor = ConsoleColor.Green;
+            System.Console.BackgroundColor = ConsoleColor.Black;
             if (Input.Contains(" "))
             {
                 var choice = Input.Split(" ");
@@ -111,7 +110,7 @@ namespace CastleGrimtol.Project
                         Move("west");
                     }
                 }
-                else if (command == "look")
+                else if (command == "look" || command == "l")
                 {
                     if (option == "n" || option == "north")
                     {
@@ -135,6 +134,10 @@ namespace CastleGrimtol.Project
                         {
                             System.Console.WriteLine(CurrentRoom.DescriptionE);
                         }
+                        else if(context == "trash" || context == "bags" || context == "garbage" && CurrentRoom == Rooms[0])
+                        {
+                            System.Console.WriteLine(CurrentRoom.DescriptionW);
+                        }
                     }
                 }
                 else if (command == "take")
@@ -143,8 +146,8 @@ namespace CastleGrimtol.Project
                     {
                         if (option == "pipe")
                         {
-                        ;
-                        }
+                        CurrentPlayer.Inventory.Add(pipe);
+                        };
                     }
                 }
             }

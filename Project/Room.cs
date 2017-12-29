@@ -4,10 +4,10 @@ namespace CastleGrimtol.Project
 {
     public class Room : IRoom
     {
-        public Room()
+        public Room(string name, string description)
         {
-            Name = Name;
-            Description = Description;
+            Name = name;
+            Description = description;
             Items = new List<Item>();
             Exits = new Dictionary<string, Room>();
             Contextual = new Dictionary<string, Room>();
