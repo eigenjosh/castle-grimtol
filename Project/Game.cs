@@ -86,6 +86,17 @@ namespace CastleGrimtol.Project
                 System.Console.WriteLine($"--Cannot take {itemName}.");
             }
         }
+        public void UseItem(string itemName)
+        {
+            Item item = CurrentPlayer.Inventory.Find(Item => Item.Name.ToLower() == itemName);
+            if(item != null && item.Name == "pipe")
+            {
+                if(CurrentRoom == Rooms[0])
+                {
+                    
+                }
+            }
+        }
         public void Reset()
         {
 
@@ -108,11 +119,6 @@ namespace CastleGrimtol.Project
             {
                 Console.WriteLine("--You cannot move in that direction.");
             }
-        }
-
-        public void UseItem(string name)
-        {
-
         }
         public string GetUserInput()
         {
