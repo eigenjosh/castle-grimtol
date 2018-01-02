@@ -22,7 +22,7 @@ namespace CastleGrimtol.Project
             Rooms = new List<Room>();
             Player1 = new Player();
 
-            Room Room0 = new Room(name: "Storage Room 0", description: "--A single skylight, cracked and yellowing from age, provides barely enough light to see that you are in some sort of dilapidated storage room.\nTwo rows of metal shelves stand near the wall to your right (east). A heap of black garbage bags lay against the opposing wall.")
+            Room Room0 = new Room("Storage Room 0", description: "--A single skylight, cracked and yellowing from age, provides barely enough light to see that you are in some sort of dilapidated storage room.\nTwo rows of metal shelves stand near the wall to your right (east). A heap of black garbage bags lay against the opposing wall.")
             {
                 //Rooms[0]
                 DescriptionE = @"--After allowing your eyes to adjust to the low light, you think you can make out what looks like a metal pipe, roughly forearm-length and capped at one end.",
@@ -60,14 +60,14 @@ namespace CastleGrimtol.Project
             Item bentKey = new Item("bent key", "--A small brass key that is bent just slightly.");
             Room0.Items.Add(pipe);
             Room0.Exits.Add("north", Room1);
-            Room0.Contextual.Add("get up", Room0);
+            // Room0.Contextual.Add("get up", Room0);
 
             Room1.Exits.Add("south", Room0);
             Room1.Exits.Add("east", Room2);
             Room2.Exits.Add("west", Room1);
             Room2.Exits.Add("north", Room3);
             Room3.Exits.Add("south", Room2);
-            
+
             CurrentRoom = Room0;
             CurrentPlayer = Player1;
         }
@@ -180,24 +180,19 @@ namespace CastleGrimtol.Project
                 }
                 else if (command == "take")
                 {
-                    if (CurrentRoom.Name.Equals("Storage Room 0"))
+                    // Predicate<Item> ItemFinder = (Item i) => { return i.Name == preposition; };
+                    foreach (Item item in CurrentRoom.Items)
                     {
-                        if (preposition == "pipe")
+                        if(item.Name == preposition)
                         {
-                            // CurrentRoom.Items.Add(new Item("pipe", "A metal pipe, about forearm-length and capped on one end."));
-                            CurrentPlayer.Inventory.Add(pipe);
-                            System.Console.WriteLine("pipe added to inventory");
-                            return;
+                            CurrentPlayer.Inventory.Add(item);
+                            Player.ShowInventory();
                         }
                         else
                         {
+                            System.Console.WriteLine("You can't do that here.");
                             return;
                         }
-                    }
-                    else
-                    {
-                        System.Console.WriteLine("You can't do that here.");
-                        return;
                     }
                 }
                 else
