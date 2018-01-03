@@ -12,49 +12,93 @@ namespace CastleGrimtol.Project
         public List<Room> Rooms { get; set; }
         public Player Player1 { get; set; }
 
-        public void Reset()
-        {
-
-        }
-
-        public void Setup()
+        public void BuildRooms()
         {
             Rooms = new List<Room>();
-            Player1 = new Player();
 
             Room Room0 = new Room("Storage Room 0", description: "--A single skylight, cracked and yellowing from age, provides barely enough light to see that you are in some sort of dilapidated storage room.\nTwo rows of metal shelves stand near the wall to your right (east). A heap of black garbage bags lay against the opposing wall.")
             {
-                //Rooms[0]
                 DescriptionE = @"--After allowing your eyes to adjust to the low light, you think you can make out what looks like a metal pipe, roughly forearm-length and capped at one end.",
                 DescriptionW = @"--Using your hands to feel around the trash bags, you hear something small and metal fall onto the concrete floor.",
                 DescriptionN = "--A door leading out of the storage room",
                 DescriptionS = "--A simple white brick wall. Squinting your eyes, you can see an externally mounted electrical outlet near the bottom of the wall.",
                 Items = new List<Item>(),
-                //pipe
-                //bent key
+
                 Exits = new Dictionary<string, Room>()
-                //north to corridor (Rooms[1])
             };
             Room Room1 = new Room(name: "Corridor 1", description: "--You find yourself in a corridor, leading East and nowhere else.")
             {
-                //Rooms[1]
                 DescriptionN = "This is the north wall of Corridor 1",
                 Items = new List<Item>(),
                 Exits = new Dictionary<string, Room>()
-                //south to storage room (Rooms[0])
             };
             Room Room2 = new Room(name: "Empty Room 2", description: "--This room hasn't been built yet.")
             {
-                //Rooms[2]
                 Items = new List<Item>(),
                 Exits = new Dictionary<string, Room>()
             };
             Room Room3 = new Room(name: "Empty Room 3", description: "--This room hasn't been built yet.")
             {
-                //Rooms[3]
                 Items = new List<Item>(),
                 Exits = new Dictionary<string, Room>()
             };
+            AddRooms();
+            AddExits();
+            BuildItems();
+            void AddRooms()
+            {
+                Rooms.Add(Room0);
+                Rooms.Add(Room1);
+                Rooms.Add(Room2);
+                Rooms.Add(Room3);
+            }
+            void AddExits()
+            {
+                Room0.Exits.Add("north", Room1);
+                Room1.Exits.Add("south", Room0);
+                Room1.Exits.Add("east", Room2);
+                Room2.Exits.Add("west", Room1);
+                Room2.Exits.Add("north", Room3);
+                Room3.Exits.Add("south", Room2);
+            }
+            CurrentRoom = Room0;
+            void BuildItems()
+            {
+                Item pipe = new Item("pipe", "--A metal pipe, about forearm-length and capped on one end.");
+                Item bentKey = new Item("bent key", "--A small brass key that is bent just slightly.");
+                Room0.Items.Add(pipe);
+                Room0.Items.Add(bentKey);
+            }
+        }
+        public void TakeItem(string itemName)
+        {
+            Item item = CurrentRoom.Items.Find(Item => Item.Name.ToLower() == itemName);
+            if (item != null)
+            {
+                CurrentRoom.Items.Remove(item);
+                CurrentPlayer.Inventory.Add(item);
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                CurrentPlayer.ShowInventory(CurrentPlayer);
+                Console.ResetColor();
+            }
+            else
+            {
+                System.Console.WriteLine($"--Cannot take {itemName}.");
+            }
+        }
+        public void UseItem(string itemName)
+        {
+            Item item = CurrentPlayer.Inventory.Find(Item => Item.Name.ToLower() == itemName);
+            if(item != null && item.Name == "pipe")
+            {
+                if(CurrentRoom == Rooms[0])
+                {
+                    
+                }
+            }
+        }
+        public void Reset()
+        {
 
             Item pipe = new Item("pipe", "--A metal pipe, about forearm-length and capped on one end.");
             Item bentKey = new Item("bent key", "--A small brass key that is bent just slightly.");
@@ -83,11 +127,6 @@ namespace CastleGrimtol.Project
             {
                 Console.WriteLine("--You cannot move in that direction.");
             }
-        }
-
-        public void UseItem(string name)
-        {
-
         }
         public string GetUserInput()
         {
@@ -186,7 +225,7 @@ namespace CastleGrimtol.Project
                         if(item.Name == preposition)
                         {
                             CurrentPlayer.Inventory.Add(item);
-                            Player.ShowInventory();
+                            CurrentPlayer.ShowInventory();
                         }
                         else
                         {
