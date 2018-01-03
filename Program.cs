@@ -9,7 +9,6 @@ namespace CastleGrimtol
         {
             var game = new Game();
             game.Setup();
-            game.BuildRooms();
             Console.Clear();
             var playing = true;
 
