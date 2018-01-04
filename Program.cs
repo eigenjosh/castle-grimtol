@@ -9,13 +9,13 @@ namespace CastleGrimtol
         {
             var game = new Game();
             game.Setup();
-            Console.Clear();
+            // System.Console.Clear();
             var playing = true;
 
             while (playing)
             {
                 var Input = game.GetUserInput().ToLower();
-                System.Console.BackgroundColor = ConsoleColor.DarkGray;
+                System.Console.BackgroundColor = ConsoleColor.Black;
                 if (Input == "q" || Input == "quit")
                 {
                     playing = false;

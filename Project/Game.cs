@@ -79,10 +79,10 @@ namespace CastleGrimtol.Project
         {
             System.Console.WriteLine(preposition);
             // Console.ReadLine();
-            // Item item = CurrentRoom.Items.Find(i => i.Name.ToLower() == preposition);
+            Item item = CurrentRoom.Items.Find(i => i.Name.ToLower() == preposition);
             for (var i = 0; i < CurrentRoom.Items.Count; i++)
             {
-                var item = CurrentRoom.Items[i];
+                item = CurrentRoom.Items[i];
                 System.Console.WriteLine(item);
                 // Console.ReadLine();
                 System.Console.WriteLine(item);
@@ -126,16 +126,14 @@ namespace CastleGrimtol.Project
         }
         public string GetUserInput()
         {
-            System.Console.BackgroundColor = ConsoleColor.Black;
             System.Console.WriteLine(@"
             What would you like to do?");
-            Console.ResetColor();
             return Console.ReadLine();
         }
         public void HandleUserInput(string Input)
         {
+            Console.Clear();
             System.Console.ForegroundColor = ConsoleColor.Green;
-            System.Console.BackgroundColor = ConsoleColor.Black;
             if (Input.Contains(" "))
             {
                 var choice = Input.Split(" ");
@@ -213,7 +211,7 @@ namespace CastleGrimtol.Project
                         System.Console.WriteLine("Unrecognized direction.");
                     }
                 }
-                else if (command == "take")
+                else if (command == "take" && preposition != null)
                 {
                     // Predicate<Item> ItemFinder = (Item i) => { return i.Name == preposition; };
                     TakeItem(preposition);
