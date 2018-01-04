@@ -47,8 +47,8 @@ namespace CastleGrimtol.Project
                     Exits = new Dictionary<string, Room>()
                 };
                 AddRooms();
-                AddExits();
                 BuildItems();
+                AddExits();
                 void AddRooms()
                 {
                     Rooms.Add(Room0);
@@ -58,12 +58,9 @@ namespace CastleGrimtol.Project
                 }
                 void AddExits()
                 {
-                    Room0.Exits.Add("north", Room1);
+                    // Room0.Exits.Add("north", Room1);
                     Room1.Exits.Add("south", Room0);
                     Room1.Exits.Add("east", Room2);
-                    Room2.Exits.Add("west", Room1);
-                    Room2.Exits.Add("north", Room3);
-                    Room3.Exits.Add("south", Room2);
                 }
                 void BuildItems()
                 {
@@ -73,51 +70,50 @@ namespace CastleGrimtol.Project
                     Room0.Items.Add(bentKey);
                 }
                 CurrentRoom = Room0;
+                CurrentPlayer = new Player();
             }
         }
+
+
+
         public void TakeItem(string preposition)
         {
-            System.Console.WriteLine(preposition);
+            System.Console.WriteLine($"{preposition} has been added to your inventory.");
             // Console.ReadLine();
             Item item = CurrentRoom.Items.Find(i => i.Name.ToLower() == preposition);
             for (var i = 0; i < CurrentRoom.Items.Count; i++)
             {
                 item = CurrentRoom.Items[i];
-                System.Console.WriteLine(item);
-                // Console.ReadLine();
-                System.Console.WriteLine(item);
                 CurrentPlayer.Inventory.Add(item);
-                System.Console.WriteLine("You made it here");
-                Console.ReadLine();
-                // CurrentRoom.Items.Remove(item);
-                // Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.ResetColor();
 
             }
         }
         public void UseItem(string preposition)
         {
-            foreach (Item item in CurrentPlayer.Inventory)
-            {
-                // Item item = CurrentPlayer.Inventory.Find(Item => Item.Name.ToLower() == preposition);
+                Item itemName = CurrentPlayer.Inventory.Find(Item => Item.Name.ToLower() == preposition);
                 if (preposition != null && preposition == "pipe" && CurrentRoom == Rooms[0])
                 {
-                    System.Console.WriteLine("--Facing the locked door to your north, you slam the open end of the pipe down on the metal handle. After several glancing blows, the pipe finally connects and sends the handle clattering to the floor.");
-                    Rooms[0].Exits.Add("north", Rooms[1]);
-                    Rooms[1].Exits.Add("south", Rooms[0]);
+                    System.Console.WriteLine(@"--Facing the locked door to your north, you slam the open end of the pipe down on the metal handle. 
+                    After several glancing blows, the pipe finally connects and sends the handle clattering to the floor.");
+                    System.Console.WriteLine(CurrentRoom.Exits.Keys.ToString());
+                    CurrentRoom.Exits.Add("north", Rooms[1]);
+                    // Rooms[1].Exits.Add("south", CurrentRoom);
                 }
-            }
         }
         public void Reset()
         {
+            Setup();
         }
 
         public void Move(string direction)
         {
             if (CurrentRoom.Exits.ContainsKey(direction))
             {
-                CurrentRoom = CurrentRoom.Exits[$"{direction}"];
-                System.Console.WriteLine(CurrentRoom.Description);
+
+                    CurrentRoom = CurrentRoom.Exits[$"{direction}"];
+                    System.Console.WriteLine(CurrentRoom.Description);
+            
             }
             else
             {
@@ -216,9 +212,9 @@ namespace CastleGrimtol.Project
                     // Predicate<Item> ItemFinder = (Item i) => { return i.Name == preposition; };
                     TakeItem(preposition);
                 }
-                else
+                else if (command == "use" && preposition != null)
                 {
-                    System.Console.WriteLine("Unknown command. Type \"h\" for a list of commands.");
+                    UseItem(preposition);
                     return;
                 }
             }

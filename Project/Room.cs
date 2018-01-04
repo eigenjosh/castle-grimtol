@@ -11,8 +11,10 @@ namespace CastleGrimtol.Project
             Items = new List<Item>();
             Exits = new Dictionary<string, Room>();
             // Contextual = new Dictionary<string, Room>();
+            Locked = true;
         }
 
+        public bool Locked { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string DescriptionN { get; set; }
