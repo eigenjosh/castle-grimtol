@@ -36,12 +36,12 @@ namespace CastleGrimtol.Project
                     Items = new List<Item>(),
                     Exits = new Dictionary<string, Room>()
                 };
-                Room Room2 = new Room(name: "Empty Room 2", description: "--This room hasn't been built yet.")
+                Room Room2 = new Room(name: "Altar Room", description: "--A musty and dark semicircular room. Across from you stands a large stone slab flanked by two lit braziers. To your right, there is a large wooden door.")
                 {
                     Items = new List<Item>(),
                     Exits = new Dictionary<string, Room>()
                 };
-                Room Room3 = new Room(name: "Empty Room 3", description: "--This room hasn't been built yet.")
+                Room Room3 = new Room(name: "Antechamber", description: "--As soon as you set foot on the hard dirt floor, you look in front of you at a seemingly endless tunnel lit by hundreds of rusted iron wall sconces. Suddenly, you think you see the darkness far at the end of tunnel begin to swell and move toward you. Your blood freezes cold in your veins. Petrified by an overwhelming sense of inescapable dread, your gaze remains transfixed on the abyss growing before you. The tunnel is now only lit about fifty yards in front of you, and the ground begins to shake. Thirty yards now. In a matter of seconds the roaring stygial blackness splits your eardrums and deafens you to your own terrified screams as the last of the tunnel's light extinguishes.")
                 {
                     Items = new List<Item>(),
                     Exits = new Dictionary<string, Room>()
@@ -61,6 +61,9 @@ namespace CastleGrimtol.Project
                     // Room0.Exits.Add("north", Room1);
                     Room1.Exits.Add("south", Room0);
                     Room1.Exits.Add("east", Room2);
+                    Room2.Exits.Add("west", Room1);
+                    Room2.Exits.Add("south", Room3);
+                    Room3.Exits.Add("north", Room2);
                 }
                 void BuildItems()
                 {
